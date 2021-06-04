@@ -21,8 +21,8 @@ def main(args):
     img_h_orig, img_w_orig = 1024, 2048  # original size of images in Cityscapes dataset
     img_h, img_w = args.img_height, args.img_width
 
-    if not os.path.exists('test_segmentations'):
-        os.makedirs('test_segmentations')
+    if not os.path.exists('extended_prototype/test_segmentations'):
+        os.makedirs('extended_prototype/test_segmentations')
         print('test_segmentations directory created.')
 
     dataset = CityscapesDataset()
