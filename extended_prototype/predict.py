@@ -15,6 +15,8 @@ from models import ERFNet
 
 from utils import read_image
 
+foreground_sounds_dict, background_sounds_dict = {}, {}
+
 def main(args):
     img_h_orig, img_w_orig = 1024, 2048  # original size of images in Cityscapes dataset
     img_h, img_w = args.img_height, args.img_width
@@ -65,12 +67,13 @@ def main(args):
 
         # Print detected_objects
         print()
-        foreground_sounds, background_sounds = get_sounds(image_path, save_path, y_pred_labels, dataset) 
-
+        _, tail = os.path.split(image_path)
+        foreground_sounds, background_sounds = get_sounds(image_path, save_path, y_pred_labels, dataset)
+        foreground_sounds_dict[tail] = foreground_sounds
+        background_sounds_dict[tail] = background_sounds
     mean_inference_time = sum(inference_times) / len(inference_times)
     print('\nAverage inference time: {:.3f} s'.format(mean_inference_time))
-    return foreground_sounds, background_sounds
-    
+    return foreground_sounds_dict, background_sounds_dict
 
 def get_sounds(image_path, save_path, y_pred_labels, dataset):
     print('Prediction of image\n{}'.format(image_path, save_path))
