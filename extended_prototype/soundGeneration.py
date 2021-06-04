@@ -119,10 +119,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     foreground_objects, background_objects = predict.main(args)
-    print("foregroundsound dictionary: {} backgroundsound dictionary: {}".format(foreground_objects, background_objects))
     image_names = list(foreground_objects.keys())
     foreground_objects_list = list(foreground_objects.values())
     background_objects_list = list(background_objects.values())
     soundscape_generator = SoundGenerator(foreground_sounds=foreground_objects_list, background_sounds=background_objects_list, image_names=image_names)
-    number_soundscapes_per_image = range(len(image_names))
+    number_soundscapes_per_image = range(0, 3)
     soundscape_generator.generate_sound(number_soundscapes_per_image)
