@@ -80,10 +80,10 @@ def get_sounds(image_path, save_path, y_pred_labels, dataset):
     unique, counts = np.unique(y_pred_labels.numpy(),return_counts=True)
     detected_objects_dict = dict(zip(unique, counts))
     topitems = heapq.nlargest(5, detected_objects_dict.items(), key=itemgetter(1))
-    foreground_sounds_dict = dict(topitems)
-    foreground_sounds_array = np.fromiter(foreground_sounds_dict.keys(), dtype=int)
+    background_sounds_dict = dict(topitems)
+    background_sounds_array = np.fromiter(background_sounds_dict.keys(), dtype=int)
     detected_objects_array = np.fromiter(detected_objects_dict.keys(), dtype=int)
-    background_sounds_array= [i for i in detected_objects_array if i not in foreground_sounds_array]
+    foreground_sounds_array= [i for i in detected_objects_array if i not in background_sounds_array]
     detected_objects_names = []
     foreground_sounds = []
     background_sounds = []

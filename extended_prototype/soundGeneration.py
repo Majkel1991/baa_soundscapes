@@ -13,39 +13,36 @@ OUTFOLDER = "C:/Soundscape"
 # SCAPER SETTINGS
 FG_FOLDER = "C:/Soundbank/foreground"
 BG_FOLDER = "C:/Soundbank/background"
-N_SOUNDSCAPES = 1
-REF_DB = -50
+REF_DB = -10 #Difference between background and foreground DB
 DURATION = 30.0
 
-MIN_EVENTS = 3
-MAX_EVENTS = 9
+MIN_EVENTS = 4
+MAX_EVENTS = 12
 
-EVENT_TIME_DIST = 'truncnorm'
-EVENT_TIME_MEAN = 5.0
-EVENT_TIME_STD = 2.0
-EVENT_TIME_MIN = 0.0
-EVENT_TIME_MAX = 10.0
+EVENT_TIME_DIST = 'normal'
+EVENT_TIME_MEAN = 15
+EVENT_TIME_STD = 6.0
 
 SOURCE_TIME_DIST = 'const'
 SOURCE_TIME = 0.0
 
 EVENT_DURATION_DIST = 'uniform'
-EVENT_DURATION_MIN = 7
-EVENT_DURATION_MAX = 12
+EVENT_DURATION_MIN = 4
+EVENT_DURATION_MAX = 8
 
-SNR_DIST = 'uniform'
-SNR_MIN = 6
-SNR_MAX = 30
+SNR_DIST = 'uniform' #the signal-to-noise ratio (in LUFS) compared to the background (DB Difference). 
+SNR_MIN = 3
+SNR_MAX = 5
 
 PITCH_DIST = 'uniform'
-PITCH_MIN = -1.0
-PITCH_MAX = 1.0
+PITCH_MIN = -0.2
+PITCH_MAX = 0.2
 
 TIME_STRETCH_DIST = 'uniform'
-TIME_STRETCH_MIN = 0.8
-TIME_STRETCH_MAX = 1.2
-# generate a random seed for this Scaper object
-SEED = 123
+TIME_STRETCH_MIN = 0.5
+TIME_STRETCH_MAX = 1.0
+
+SEED = 123 #Generate a random seed for this Scaper object
 
 class SoundGenerator():
 
@@ -84,16 +81,16 @@ class SoundGenerator():
                                 source_time=('const', 0))
 
                 # add random number of foreground events
-                n_events = np.random.randint(MIN_EVENTS, MAX_EVENTS+1)
+                n_events = np.random.randint(MIN_EVENTS, MAX_EVENTS)
                 for _ in range(n_events):
                     self.sc.add_event(label=('choose', final_fg_sound),
                                 source_file=('choose', []),
                                 source_time=(SOURCE_TIME_DIST, SOURCE_TIME),
-                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD, EVENT_TIME_MIN, EVENT_TIME_MAX),
+                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD),
                                 event_duration=(EVENT_DURATION_DIST, EVENT_DURATION_MIN, EVENT_DURATION_MAX),
                                 snr=(SNR_DIST, SNR_MIN, SNR_MAX),
-                                pitch_shift=(PITCH_DIST, PITCH_MIN, PITCH_MAX),
-                                time_stretch=(TIME_STRETCH_DIST, TIME_STRETCH_MIN, TIME_STRETCH_MAX))
+                                pitch_shift=(None),
+                                time_stretch=(None))
 
                 # generate
                 audiofile = os.path.join(OUTFOLDER, "{}{:d}.wav".format(image_name,n))
