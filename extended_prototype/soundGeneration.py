@@ -111,6 +111,8 @@ class SoundGenerator():
                 print("Path to output folder: {}".format(OUTFOLDER))
                         
 if __name__ == "__main__":
+    os.chdir("extended_prototype")
+    
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--img_height', type=int, default=512, help='Image height after resizing')
