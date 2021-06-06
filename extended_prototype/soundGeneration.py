@@ -17,18 +17,19 @@ REF_DB = -10 #Difference between background and foreground DB
 DURATION = 30.0
 
 MIN_EVENTS = 4
-MAX_EVENTS = 12
+MAX_EVENTS = 6 # 11 Objects with sound - 5 Background = 6
 
 EVENT_TIME_DIST = 'normal'
 EVENT_TIME_MEAN = 15
-EVENT_TIME_STD = 6.0
+EVENT_TIME_STD = 4.0
+
 
 SOURCE_TIME_DIST = 'const'
 SOURCE_TIME = 0.0
 
 EVENT_DURATION_DIST = 'uniform'
-EVENT_DURATION_MIN = 4
-EVENT_DURATION_MAX = 8
+EVENT_DURATION_MIN = 12
+EVENT_DURATION_MAX = 16
 
 SNR_DIST = 'uniform' #the signal-to-noise ratio (in LUFS) compared to the background (DB Difference). 
 SNR_MIN = 3
@@ -81,7 +82,7 @@ class SoundGenerator():
                                 source_time=('const', 0))
 
                 # add random number of foreground events
-                n_events = np.random.randint(MIN_EVENTS, MAX_EVENTS)
+                n_events = np.random.randint(MIN_EVENTS, MAX_EVENTS+1)
                 for _ in range(n_events):
                     self.sc.add_event(label=('choose', final_fg_sound),
                                 source_file=('choose', []),
@@ -94,16 +95,18 @@ class SoundGenerator():
 
                 # generate
                 audiofile = os.path.join(OUTFOLDER, "{}{:d}.wav".format(image_name,n))
-                jamsfile = os.path.join(OUTFOLDER, "{}{:d}.jams".format(image_name,n))
                 txtfile = os.path.join(OUTFOLDER, "{}{:d}.txt".format(image_name,n))
 
-                self.sc.generate(audiofile, jamsfile,
+                self.sc.generate(audiofile,
                             allow_repeated_label=True,
                             allow_repeated_source=True,
                             reverb=0.1,
                             disable_sox_warnings=True,
                             no_audio=False,
-                            txt_path=txtfile)
+                            txt_path=txtfile,
+                            peak_normalization=True,
+                            disable_instantiation_warnings=True
+                            )
                 
                 print("Path to output folder: {}".format(OUTFOLDER))
                         
