@@ -9,10 +9,10 @@ import predict
 
 """ Constansts for Scaper """
 # OUTPUT FOLDER
-OUTFOLDER = "C:/Soundscape"
+OUTFOLDER = "soundscapes/"
 # SCAPER SETTINGS
-FG_FOLDER = "C:/Soundbank/foreground"
-BG_FOLDER = "C:/Soundbank/background"
+FG_FOLDER = "soundbank/foreground"
+BG_FOLDER = "soundbank/background"
 REF_DB = -10 #Difference between background and foreground DB
 DURATION = 30.0
 
