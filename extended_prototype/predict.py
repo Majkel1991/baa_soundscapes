@@ -99,6 +99,7 @@ def get_sounds(image_path, save_path, y_pred_labels, dataset):
     return foreground_sounds, background_sounds
 
 if __name__ == '__main__':
+    os.chdir("extended_prototype")
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--img_height', type=int, default=512, help='Image height after resizing')

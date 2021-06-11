@@ -6,21 +6,23 @@ import time
 import glob
 import tensorflow as tf
 import numpy as np
-from sklearn.metrics import average_precision_score, confusion_matrix
 
 from datasets import CityscapesDataset
 from models import ERFNet
+
+from utils import read_image
 
 
 
 def main(args):
 
+    image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.png')))
+
     img_h, img_w = args.img_height, args.img_width
     val_batch_size = args.val_batch_size
     is_validation_set = args.is_validation_set
 
-    own_test_set_true = np.ones(shape=(1, 19))
-    own_test_set_pred = np.ones(shape=(1, 19))
+    own_test_set_true = [[0, 0, 0,1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1], ]
 
     dataset = CityscapesDataset()
 
@@ -36,15 +38,16 @@ def main(args):
     weights_path = os.path.join(os.getcwd(), args.weights)
     network.load_weights(weights_path)
     print('Weights from {} loaded correctly.'.format(weights_path))
-    get_percision_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, own_test_set_pred)
-    get_recall_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, own_test_set_pred)
+    get_percision_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
+    get_recall_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
 
     
-def get_percision_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, own_test_set_pred):
+def get_percision_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
     total_tp = tf.zeros((1), tf.int64)
     total_tp_and_fp = tf.zeros((1), tf.int64)
     num_val_batches = dataset.num_val_images // val_batch_size
     if(is_validation_set):
+        print()
         for batch in range(num_val_batches):
             x, y_true_labels = dataset.get_validation_batch(batch, val_batch_size, image_size)
             y_pred_logits = network(x, is_training=False)
@@ -56,18 +59,25 @@ def get_percision_on_validation_set(dataset, network, val_batch_size, image_size
             print('Precistion from batch {} / {} is {}.'.format(batch+1, num_val_batches, batchprecision))
             print()
         total_set_precision = tf.divide(total_tp, total_tp_and_fp)
-        print('Total Precistion is {}'.format(total_set_precision))
+        print('Total Precistion on validation set is {}'.format(total_set_precision))
         return total_set_precision
     else:
-        for batch in range(num_val_batches):
-            tp_batch, tp_and_fp_batch = get_precisition_in_batch(own_test_set_true, own_test_set_pred, dataset.num_classes, is_validation_set)
+        print()
+        test_set_true_counter = 0
+        for image_path in image_paths:
+            image = read_image(image_path, image_size)
+            x = tf.expand_dims(image, axis=0)
+            y_pred_logits = network(x, is_training=False)  # (1, img_h, img_w, num_classes)
+            y_pred_labels = tf.math.argmax(y_pred_logits[0], axis=-1, output_type=tf.int32)
+            tp_batch, tp_and_fp_batch = get_precisition_in_batch(np.array(own_test_set_true[test_set_true_counter]), y_pred_labels, dataset.num_classes, is_validation_set)
             total_tp += tp_batch
             total_tp_and_fp += tp_and_fp_batch
             batchprecision = tf.divide(tp_batch, tp_and_fp_batch)
-            print('Precistion from batch {} / {} is {}.'.format(batch+1, num_val_batches, batchprecision))
+            test_set_true_counter += 1
+            print('Precistion from image {}: {}.'.format(image_path, batchprecision))
             print()
         total_set_precision = tf.divide(total_tp, total_tp_and_fp)
-        print('Total Precistion is {}'.format(total_set_precision))
+        print('Total Precistion on own test set is {}'.format(total_set_precision))
         return total_set_precision
 
 
@@ -97,10 +107,18 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
             if(y_pred_bool_array[i] > y_true_bool_array[i]):
                 fp += 1
     else:
-        for i in range(len(y_true)):
-            if(y_true[i] ==1 and y_pred==1):
+        y_pred_labels_list = []
+
+        for class_label in range(num_classes-1):
+            pred_equal_class = tf.cast(tf.equal(y_pred, class_label), tf.int32)
+            y_pred_labels_list.append(tf.reduce_sum(pred_equal_class))
+
+        y_pred_array = np.array(y_pred_labels_list)
+        y_pred_bool_array = np.where(y_pred_array > 0, 1, 0)
+        for i in range(len(y_pred_bool_array)):
+            if(y_true[i]==1 and y_pred_bool_array[i]==1):
                 tp += 1
-            if(y_pred[i] > y_true[i]):
+            if(y_pred_bool_array[i] > y_true[i]):
                 fp += 1
     print("y_true: {}".format(y_true_bool_array))
     print("y_pred: {}".format(y_pred_bool_array))
@@ -109,11 +127,12 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
     tp_and_fp_batch.append(tp + fp)
     return tp_batch, tp_and_fp_batch     
 
-def get_recall_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, own_test_set_pred):
+def get_recall_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
     total_tp = tf.zeros((1), tf.int64)
     total_tp_and_fn = tf.zeros((1), tf.int64)
     num_val_batches = dataset.num_val_images // val_batch_size
     if(is_validation_set):
+        print()
         for batch in range(num_val_batches):
             x, y_true_labels = dataset.get_validation_batch(batch, val_batch_size, image_size)
             y_pred_logits = network(x, is_training=False)
@@ -125,18 +144,25 @@ def get_recall_on_validation_set(dataset, network, val_batch_size, image_size, i
             print('Recall from batch {} / {} is {}.'.format(batch+1, num_val_batches, batchrecall))
             print()
         total_set_recall = tf.divide(total_tp, total_tp_and_fn)
-        print('Total Recall is {}'.format(total_set_recall))
+        print('Total Recall on validation set is {}'.format(total_set_recall))
         return total_set_recall
     else:
-        for batch in range(num_val_batches):
-            tp_batch, tp_and_fn_batch = get_recall_in_batch(own_test_set_true, own_test_set_pred, dataset.num_classes, is_validation_set)
+        print()
+        test_set_true_counter = 0
+        for image_path in image_paths:
+            image = read_image(image_path, image_size)
+            x = tf.expand_dims(image, axis=0)
+            y_pred_logits = network(x, is_training=False)  # (1, img_h, img_w, num_classes)
+            y_pred_labels = tf.math.argmax(y_pred_logits[0], axis=-1, output_type=tf.int32)
+            tp_batch, tp_and_fn_batch = get_recall_in_batch(np.array(own_test_set_true[test_set_true_counter]), y_pred_labels, dataset.num_classes, is_validation_set)
             total_tp += tp_batch
             total_tp_and_fn += tp_and_fn_batch
             batchrecall= tf.divide(tp_batch, tp_and_fn_batch)
-            print('Recall from batch {} / {} is {}.'.format(batch+1, num_val_batches, batchrecall))
+            test_set_true_counter += 1
+            print('Recall from image {}: {}.'.format(image_path, batchrecall))
             print()
         total_set_recall = tf.divide(total_tp, total_tp_and_fn)
-        print('Total Recall is {}'.format(total_set_recall))
+        print('Total Recall on own test set is {}'.format(total_set_recall))
         return total_set_recall
 
 def get_recall_in_batch(y_true, y_pred, num_classes, is_validation_set):
@@ -166,10 +192,18 @@ def get_recall_in_batch(y_true, y_pred, num_classes, is_validation_set):
             if(y_pred_bool_array[i] < y_true_bool_array[i]):
                 fn += 1
     else:
-        for i in range(len(y_true)):
-            if(y_true[i] ==1 and y_pred==1):
+        y_pred_labels_list = []
+        for class_label in range(num_classes-1):
+            pred_equal_class = tf.cast(tf.equal(y_pred, class_label), tf.int32)
+            y_pred_labels_list.append(tf.reduce_sum(pred_equal_class))
+
+        y_pred_array = np.array(y_pred_labels_list)
+        y_pred_bool_array = np.where(y_pred_array > 0, 1, 0)
+
+        for i in range(len(y_pred_labels_list)):
+            if(y_true[i]==1 and y_pred_bool_array[i]==1):
                 tp += 1
-            if(y_pred[i] < y_true[i]):
+            if(y_pred_bool_array[i] < y_true[i]):
                 fn += 1
     print("y_true: {}".format(y_true_bool_array))
     print("y_pred: {}".format(y_pred_bool_array))

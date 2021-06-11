@@ -16,10 +16,10 @@ class CityscapesDataset:
         self.val_segmentation_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'data', 'segmentations', 'val', '*', '*labelIds.png')))
         self.num_val_images = len(self.val_image_paths)
 
-        self.class_names = ['road', 'sidewalk', 'building', 'wall', 'fence', 'pole', 
-                            'traffic light', 'traffic sign', 'vegetation', 'terrain', 
-                            'sky', 'person', 'rider', 'car', 'truck', 'bus', 'train', 
-                            'motorcycle', 'bicycle', 'other']  # class 'other' includes the rest of classes
+        self.class_names = ['road', 'sidewalk', 'building', 'wall', 'fence', 'pole', #0-5
+                            'traffic light', 'traffic sign', 'vegetation', 'terrain', #6-9
+                            'sky', 'person', 'rider', 'car', 'truck', 'bus', 'train', #10-16
+                            'motorcycle', 'bicycle', 'other']  # 17-19 class 'other' includes the rest of classes
         self.name2label = {name: i for i, name in enumerate(self.class_names)}
         self.num_classes = len(self.class_names)  # 20
 
