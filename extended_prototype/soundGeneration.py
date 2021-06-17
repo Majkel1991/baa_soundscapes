@@ -13,17 +13,16 @@ OUTFOLDER = "soundscapes/"
 # SCAPER SETTINGS
 FG_FOLDER = "soundbank/foreground"
 BG_FOLDER = "soundbank/background"
-REF_DB = -5 #Difference between background and foreground DB
+REF_DB = -4 #Difference between background and foreground DB
 DURATION = 30.0
 
 MIN_EVENTS = 4
-MAX_EVENTS = 6 # 11 Objects with sound - 5 Background = 6
+MAX_EVENTS = 7 # 10 Objects with sound - 3 Background = 7
 
-EVENT_TIME_DIST = 'truncnorm'
-EVENT_TIME_MEAN = 15
-EVENT_TIME_STD = 4.0
-EVENT_TIME_MIN = 2
-EVENT_TIME_MAX = 24
+EVENT_TIME_DIST = 'normal'
+EVENT_TIME_MEAN = 20
+EVENT_TIME_STD = 9
+
 
 SOURCE_TIME_DIST = 'const'
 SOURCE_TIME = 0.0
@@ -80,7 +79,7 @@ class SoundGenerator():
                 # add background
                 self.sc.add_background(label=('choose', final_bg_sound),
                                 source_file=('choose', []),
-                                source_time=('const', 0))
+                                source_time=('normal', 20, 8))
 
                 # add random number of foreground events
                 n_events = np.random.randint(MIN_EVENTS, MAX_EVENTS+1)
@@ -88,15 +87,15 @@ class SoundGenerator():
                     self.sc.add_event(label=('choose', final_fg_sound),
                                 source_file=('choose', []),
                                 source_time=(SOURCE_TIME_DIST, SOURCE_TIME),
-                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD, EVENT_DURATION_MIN, EVENT_DURATION_MAX),
+                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD),
                                 event_duration=(EVENT_DURATION_DIST, EVENT_DURATION_MIN, EVENT_DURATION_MAX),
                                 snr=(SNR_DIST, SNR_MIN, SNR_MAX),
                                 pitch_shift=(None),
                                 time_stretch=(None))
 
                 # generate
-                audiofile = os.path.join(OUTFOLDER, "{}{:d}.wav".format(image_name,n))
-                txtfile = os.path.join(OUTFOLDER, "{}{:d}.txt".format(image_name,n))
+                audiofile = os.path.join(OUTFOLDER, "{}_soundscape_number_{:d}.wav".format(image_name,n+1))
+                txtfile = os.path.join(OUTFOLDER, "{}_soundscape_number_{:d}.txt".format(image_name,n+1))
 
                 self.sc.generate(audiofile,
                             allow_repeated_label=True,
