@@ -13,16 +13,17 @@ OUTFOLDER = "soundscapes/"
 # SCAPER SETTINGS
 FG_FOLDER = "soundbank/foreground"
 BG_FOLDER = "soundbank/background"
-REF_DB = -10 #Difference between background and foreground DB
+REF_DB = -5 #Difference between background and foreground DB
 DURATION = 30.0
 
 MIN_EVENTS = 4
 MAX_EVENTS = 6 # 11 Objects with sound - 5 Background = 6
 
-EVENT_TIME_DIST = 'normal'
+EVENT_TIME_DIST = 'truncnorm'
 EVENT_TIME_MEAN = 15
 EVENT_TIME_STD = 4.0
-
+EVENT_TIME_MIN = 2
+EVENT_TIME_MAX = 24
 
 SOURCE_TIME_DIST = 'const'
 SOURCE_TIME = 0.0
@@ -87,7 +88,7 @@ class SoundGenerator():
                     self.sc.add_event(label=('choose', final_fg_sound),
                                 source_file=('choose', []),
                                 source_time=(SOURCE_TIME_DIST, SOURCE_TIME),
-                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD),
+                                event_time=(EVENT_TIME_DIST, EVENT_TIME_MEAN, EVENT_TIME_STD, EVENT_DURATION_MIN, EVENT_DURATION_MAX),
                                 event_duration=(EVENT_DURATION_DIST, EVENT_DURATION_MIN, EVENT_DURATION_MAX),
                                 snr=(SNR_DIST, SNR_MIN, SNR_MAX),
                                 pitch_shift=(None),
