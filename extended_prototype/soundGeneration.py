@@ -13,7 +13,7 @@ OUTFOLDER = "soundscapes/"
 # SCAPER SETTINGS
 FG_FOLDER = "soundbank/foreground"
 BG_FOLDER = "soundbank/background"
-REF_DB = -4 #Difference between background and foreground DB
+REF_DB = -3 #Difference between background and foreground DB
 DURATION = 30.0
 
 MIN_EVENTS = 4
