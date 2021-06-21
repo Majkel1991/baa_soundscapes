@@ -9,6 +9,7 @@ import numpy as np
 
 from datasets import CityscapesDataset
 from models import ERFNet
+from evaluation import evaluate
 
 from utils import read_image
 
@@ -41,10 +42,11 @@ def main(args):
     weights_path = os.path.join(os.getcwd(), args.weights)
     network.load_weights(weights_path)
     print('Weights from {} loaded correctly.'.format(weights_path))
+    iou_per_class, iou_mean = evaluate(dataset, network, val_batch_size, (img_h, img_w))
+    print("iou_per_class: {}, iou_mean: {}".format(iou_per_class, iou_mean))
     get_percision_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
     get_recall_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
 
-    
 def get_percision_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
     total_tp = tf.zeros((1), tf.int64)
     total_tp_and_fp = tf.zeros((1), tf.int64)
@@ -93,7 +95,6 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
         y_pred_labels_list = []
         for class_label in range(num_classes-1):
             true_equal_class = tf.cast(tf.equal(y_true, class_label), tf.int32)
-            print(true_equal_class)
             pred_equal_class = tf.cast(tf.equal(y_pred, class_label), tf.int32)
             y_true_labels_list.append(tf.reduce_sum(true_equal_class))
             y_pred_labels_list.append(tf.reduce_sum(pred_equal_class))
@@ -104,13 +105,15 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
         # Convert to bool arrays
         y_true_bool_array = np.where(y_true_array > 0, 1, 0)
         y_pred_bool_array = np.where(y_pred_array > 0, 1, 0)
-        print(y_true_bool_array)
-
+        
         for i in range(len(y_true_bool_array)):
             if(y_true_bool_array[i] ==1 and y_pred_bool_array[i]==1):
                 tp += 1
             if(y_pred_bool_array[i] > y_true_bool_array[i]):
                 fp += 1
+        print("y_true: {}".format(y_true_bool_array))
+        print("y_pred: {}".format(y_pred_bool_array))
+        print("True Positives: {}, False Positives: {}".format(tp, fp))
     else:
         y_pred_labels_list = []
 
@@ -125,9 +128,9 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
                 tp += 1
             if(y_pred_bool_array[i] > y_true[i]):
                 fp += 1
-    print("y_true: {}".format(y_true))
-    print("y_pred: {}".format(y_pred_bool_array))
-    print("True Positives: {}, False Positives: {}".format(tp, fp))
+        print("y_true: {}".format(y_true))
+        print("y_pred: {}".format(y_pred_bool_array))
+        print("True Positives: {}, False Positives: {}".format(tp, fp))
     tp_batch.append(tp)
     tp_and_fp_batch.append(tp + fp)
     return tp_batch, tp_and_fp_batch     
@@ -196,6 +199,9 @@ def get_recall_in_batch(y_true, y_pred, num_classes, is_validation_set):
                 tp += 1
             if(y_pred_bool_array[i] < y_true_bool_array[i]):
                 fn += 1
+        print("y_true: {}".format(y_true_bool_array))
+        print("y_pred: {}".format(y_pred_bool_array))
+        print("True Positives: {}, False Negatives: {}".format(tp, fn))
     else:
         y_pred_labels_list = []
         for class_label in range(num_classes-1):
@@ -210,9 +216,9 @@ def get_recall_in_batch(y_true, y_pred, num_classes, is_validation_set):
                 tp += 1
             if(y_pred_bool_array[i] < y_true[i]):
                 fn += 1
-    print("y_true: {}".format(y_true))
-    print("y_pred: {}".format(y_pred_bool_array))
-    print("True Positives: {}, False Negatives: {}".format(tp, fn))
+        print("y_true: {}".format(y_true))
+        print("y_pred: {}".format(y_pred_bool_array))
+        print("True Positives: {}, False Negatives: {}".format(tp, fn))
     tp_batch.append(tp)
     tp_and_fn_batch.append(tp + fn)
     return tp_batch, tp_and_fn_batch
@@ -221,12 +227,13 @@ if __name__ == '__main__':
     os.chdir("extended_prototype")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--is_validation_set', type=bool, default=False, help='Evaluation on validation or own dataset')
+    parser.add_argument('--is_validation_set', type=bool, default=True, help='Evaluation on validation or own dataset')
     parser.add_argument('--img_height', type=int, default=512, help='Image height after resizing')
     parser.add_argument('--img_width', type=int, default=1024, help='Image width after resizing')
     parser.add_argument('--val_batch_size', type=int, default=1, help='Batch size for validation')
     parser.add_argument('--weights', type=str, default="pretrained/pretrained.h5", help='Relative path of network weights')
     args = parser.parse_args()
+    
     main(args)
    
     
