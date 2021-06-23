@@ -44,10 +44,10 @@ def main(args):
     print('Weights from {} loaded correctly.'.format(weights_path))
     iou_per_class, iou_mean = evaluate(dataset, network, val_batch_size, (img_h, img_w))
     print("iou_per_class: {}, iou_mean: {}".format(iou_per_class, iou_mean))
-    get_percision_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
-    get_recall_on_validation_set(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
+    get_total_percision(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
+    get_total_recall(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
 
-def get_percision_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
+def get_total_percision(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
     total_tp = tf.zeros((1), tf.int64)
     total_tp_and_fp = tf.zeros((1), tf.int64)
     num_val_batches = dataset.num_val_images // val_batch_size
@@ -135,7 +135,7 @@ def get_precisition_in_batch(y_true, y_pred, num_classes, is_validation_set):
     tp_and_fp_batch.append(tp + fp)
     return tp_batch, tp_and_fp_batch     
 
-def get_recall_on_validation_set(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
+def get_total_recall(dataset, network, val_batch_size, image_size, is_validation_set, own_test_set_true, image_paths):
     total_tp = tf.zeros((1), tf.int64)
     total_tp_and_fn = tf.zeros((1), tf.int64)
     num_val_batches = dataset.num_val_images // val_batch_size
