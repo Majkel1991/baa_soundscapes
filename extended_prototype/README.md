@@ -1,5 +1,10 @@
+# Extended Prototype
+## Soundgeneration
+
 
 ## Object Detection
+
+Thanks to garder14 for making this pre-trained model available.
 
 ### ERFNet - TensorFlow 2
 
@@ -17,7 +22,7 @@ The above predictions are produced by a network trained for 67 epochs that achie
 
 The inference time on a Tesla P100 GPU is around 0.2 seconds per image.
 
-#### Software installation
+#### Separate Software installation of the pre-trained model
 
 Clone this repository:
 
