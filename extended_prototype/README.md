@@ -15,7 +15,9 @@ Run the file soundGeneration.py to generate soundscapes of every image in the te
 
 ## Object Detection
 
-Credits: Thanks to garder14 for making this pre-trained model available.
+### Credits
+
+Thanks to garder14 for making this pre-trained model available.
 
 ### ERFNet - TensorFlow 2
 
