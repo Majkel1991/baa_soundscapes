@@ -16,3 +16,6 @@ Put requirements.txt in the directory where the command will be executed. If it 
 pip install -r requirements.txt
 ```
 
+## Extended Prototype:
+
+the use of the extended prototype is documented in the relevant directory.
