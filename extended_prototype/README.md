@@ -47,9 +47,9 @@ cd erfnet-tensorflow2/
 Dependencies of the pre-trained model:
 
 ```bash
-conda create -n tf-gpu tensorflow-gpu cudatoolkit=10.1
+conda create -n tf-gpu tensorflow-gpu cudatoolkit=11.0.221
 conda activate tf-gpu
-pip install tensorflow_addons==0.10.0 Pillow==7.1.2
+pip install tensorflow_addons==0.13.0 Pillow==7.1.2
 ```
 
 #### Training
