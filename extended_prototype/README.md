@@ -75,7 +75,7 @@ Run the following command to predict the semantic segmentation of every image in
 ```bash
 python predict.py
 ```
-Make sure that you specify the file type of the image in the image path variable.
+Make sure that you specify the file type of the image in the image path variable in predict.py.
 
 #### References
 
