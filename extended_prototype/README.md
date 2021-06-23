@@ -1,6 +1,14 @@
 # Extended Prototype
 ## Soundgeneration
+### Introduction
 The sound generation module was developed with Scaper. Given a collection of isolated sound events, Scaper acts as a high-level sequencer that can generate multiple soundscapes from a single, probabilistically defined, “specification”. 
+
+### Generate soundscapes
+Run the following command to generate soundscapes of every image in the test_images/ directory (note: results are saved in the soundscapes/ directory)
+
+```bash
+python soundGeneration.py
+```
 
 ### Installation
 Follow the instructions give in the following link:
@@ -66,7 +74,7 @@ By default, training resumes from the latest saved checkpoint. If the checkpoint
 
 #### Inference
 
-Run the following command to predict the semantic segmentation of every image in the test_images/ directory (note: results are saved in the test_segmentations/ directory). It is required to specify the location of the weights (you can use either the pretrained weights or any other weights saved during training in the saved_weights/ directory).
+Run the following command to predict the semantic segmentation of every image in the test_images/ directory (note: results are saved in the test_segmentations/ directory)
 
 ```bash
 python predict.py
