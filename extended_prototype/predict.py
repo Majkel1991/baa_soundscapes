@@ -37,7 +37,7 @@ def main(args):
 
     # Load weights and images from given paths
     weights_path = os.path.join(os.getcwd(), args.weights)
-    image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.jpg'))) # Specify Image file type
+    image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.png'))) # Specify Image file type
 
     network.load_weights(weights_path)
     print('Weights from {} loaded correctly.'.format(weights_path))
@@ -79,7 +79,7 @@ def get_sounds(image_path, save_path, y_pred_labels, dataset):
     print('Prediction of image\n{}'.format(image_path, save_path))
     unique, counts = np.unique(y_pred_labels.numpy(),return_counts=True)
     detected_objects_dict = dict(zip(unique, counts))
-    topitems = heapq.nlargest(3, detected_objects_dict.items(), key=itemgetter(1))
+    topitems = heapq.nlargest(1, detected_objects_dict.items(), key=itemgetter(1))
     background_sounds_dict = dict(topitems)
     background_sounds_array = np.fromiter(background_sounds_dict.keys(), dtype=int)
     detected_objects_array = np.fromiter(detected_objects_dict.keys(), dtype=int)

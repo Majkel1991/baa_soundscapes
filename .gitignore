@@ -211,7 +211,6 @@ BundleArtifacts/
 data/
 test_images/
 test_segmentations/
-soundscapes/
 Package.StoreAssociation.xml
 _pkginfo.txt
 *.appx
