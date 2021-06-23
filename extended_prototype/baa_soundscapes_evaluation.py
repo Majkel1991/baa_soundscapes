@@ -26,7 +26,23 @@ def main(args):
     else:
         image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.jpg')))
 
-    own_test_set_true = [[0, 0, 0,1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1, 1,1, 1, 1, 1, 1, 1, 1, 1, 1], ]
+    own_test_set_true = [
+        [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0], 
+        [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0], 
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1 ,1, 1, 1, 1, 0, 0, 0, 0, 1], 
+        [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0],
+        [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1],
+    ]
 
     dataset = CityscapesDataset()
 
@@ -42,8 +58,8 @@ def main(args):
     weights_path = os.path.join(os.getcwd(), args.weights)
     network.load_weights(weights_path)
     print('Weights from {} loaded correctly.'.format(weights_path))
-    iou_per_class, iou_mean = evaluate(dataset, network, val_batch_size, (img_h, img_w))
-    print("iou_per_class: {}, iou_mean: {}".format(iou_per_class, iou_mean))
+    #iou_per_class, iou_mean = evaluate(dataset, network, val_batch_size, (img_h, img_w))
+    #print("iou_per_class: {}, iou_mean: {}".format(iou_per_class, iou_mean))
     get_total_percision(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
     get_total_recall(dataset, network, val_batch_size, (img_h, img_w), is_validation_set, own_test_set_true, image_paths)
 
@@ -227,7 +243,7 @@ if __name__ == '__main__':
     os.chdir("extended_prototype")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--is_validation_set', type=bool, default=True, help='Evaluation on validation or own dataset')
+    parser.add_argument('--is_validation_set', type=bool, default=False, help='Evaluation on validation or own dataset')
     parser.add_argument('--img_height', type=int, default=512, help='Image height after resizing')
     parser.add_argument('--img_width', type=int, default=1024, help='Image width after resizing')
     parser.add_argument('--val_batch_size', type=int, default=1, help='Batch size for validation')
