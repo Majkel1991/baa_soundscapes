@@ -2,6 +2,11 @@
 ## Soundgeneration
 The sound generation module was developed with Scaper. Given a collection of isolated sound events, Scaper acts as a high-level sequencer that cangenerate multiple soundscapes from a single, probabilistically de-fined, “specification”. 
 
+
+#### References
+
+J. Salamon, D. MacConnell, M. Cartwright, P. Li and J. P. Bello, "Scaper: A library for soundscape synthesis and augmentation," 2017 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA), 2017, pp. 344-348, doi: 10.1109/WASPAA.2017.8170052.
+
 ## Object Detection
 
 Credits: Thanks to garder14 for making this pre-trained model available.
