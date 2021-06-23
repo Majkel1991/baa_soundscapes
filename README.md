@@ -10,6 +10,8 @@ Follow the instructions give in the following link:
 
 The following command will install the packages according to the configuration file requirements.txt.
 
+Put requirements.txt in the directory where the command will be executed. If it is in another directory, specify the path.
+
 ```bash
 pip install -r requirements.txt
 ```
