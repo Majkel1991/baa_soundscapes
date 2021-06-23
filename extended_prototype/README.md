@@ -1,8 +1,9 @@
-# ERFNet - TensorFlow 2
+
+## ERFNet - TensorFlow 2
 
 This is an unofficial implementation of [ERFNet](http://www.robesafe.es/personal/eduardo.romera/pdfs/Romera17tits.pdf) for semantic segmentation on the [Cityscapes dataset](https://www.cityscapes-dataset.com/).
 
-## Results
+### Results
 
 ![](assets/test1.png)
 ![](assets/test2.png)
@@ -14,7 +15,7 @@ The above predictions are produced by a network trained for 67 epochs that achie
 
 The inference time on a Tesla P100 GPU is around 0.2 seconds per image.
 
-## Software installation
+### Software installation
 
 Clone this repository:
 
