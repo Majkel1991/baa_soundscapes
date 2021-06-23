@@ -3,18 +3,12 @@
 ### Introduction
 The sound generation module was developed with Scaper. Given a collection of isolated sound events, Scaper acts as a high-level sequencer that can generate multiple soundscapes from a single, probabilistically defined, “specification”. 
 
-### Generate soundscapes
-Run the following command to generate soundscapes of every image in the test_images/ directory (note: results are saved in the soundscapes/ directory)
-
-```bash
-python soundGeneration.py
-```
-
 ### Installation
 Follow the instructions give in the following link:
 * [Scaper installation](https://scaper.readthedocs.io/en/latest/installation.html)
 
-
+### Generate soundscapes
+Run the file soundGeneration.py to generate soundscapes of every image in the test_images/ directory (note: results are saved in the soundscapes/ directory)
 
 #### References
 * [J. Salamon, D. MacConnell, M. Cartwright, P. Li and J. P. Bello, "Scaper: A library for soundscape synthesis and augmentation," 2017 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA), 2017, pp. 344-348, doi: 10.1109/WASPAA.2017.8170052.](http://www.justinsalamon.com/uploads/4/3/9/4/4394963/salamon_scaper_waspaa_2017.pdf)
