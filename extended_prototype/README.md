@@ -1,11 +1,11 @@
 
-# Object Detection
+## Object Detection
 
-## ERFNet - TensorFlow 2
+### ERFNet - TensorFlow 2
 
 This is an unofficial implementation of [ERFNet](http://www.robesafe.es/personal/eduardo.romera/pdfs/Romera17tits.pdf) for semantic segmentation on the [Cityscapes dataset](https://www.cityscapes-dataset.com/).
 
-### Results
+#### Results
 
 ![](assets/test1.png)
 ![](assets/test2.png)
@@ -17,7 +17,7 @@ The above predictions are produced by a network trained for 67 epochs that achie
 
 The inference time on a Tesla P100 GPU is around 0.2 seconds per image.
 
-### Software installation
+#### Software installation
 
 Clone this repository:
 
@@ -34,7 +34,7 @@ conda activate tf-gpu
 pip install tensorflow_addons==0.10.0 Pillow==7.1.2
 ```
 
-## Training
+#### Training
 
 Before training the network, you need to download the Cityscapes dataset. For this purpose, create an account in [www.cityscapes-dataset.com](https://www.cityscapes-dataset.com/), and run the following command (indicating your username and password):
 
@@ -50,7 +50,7 @@ python train.py --num_epochs 70 --batch_size 8 --evaluate_every 1 --save_weights
 
 By default, training resumes from the latest saved checkpoint. If the checkpoints/ directory is missing, the training starts from zero.
 
-## Inference
+#### Inference
 
 Run the following command to predict the semantic segmentation of every image in the test_images/ directory (note: results are saved in the test_segmentations/ directory). It is required to specify the location of the weights (you can use either the pretrained weights or any other weights saved during training in the saved_weights/ directory).
 
@@ -58,7 +58,7 @@ Run the following command to predict the semantic segmentation of every image in
 python predict.py
 ```
 
-## References
+#### References
 
 * [E. Romera et al., "ERFNet: Efficient Residual Factorized ConvNet for Real-time Semantic Segmentation", 2017](http://www.robesafe.es/personal/eduardo.romera/pdfs/Romera17tits.pdf)
 
