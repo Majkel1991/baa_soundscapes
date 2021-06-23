@@ -37,7 +37,7 @@ def main(args):
 
     # Load weights and images from given paths
     weights_path = os.path.join(os.getcwd(), args.weights)
-    image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.jpg')))
+    image_paths = sorted(glob.glob(os.path.join(os.getcwd(), 'test_images', '*.jpg'))) # Specify Image file type
 
     network.load_weights(weights_path)
     print('Weights from {} loaded correctly.'.format(weights_path))
