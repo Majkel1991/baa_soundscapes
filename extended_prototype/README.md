@@ -1,10 +1,10 @@
 # Extended Prototype
 ## Soundgeneration
-
+The sound generation module was developed with Scaper. Given a collection of isolated sound events, Scaper acts as a high-level sequencer that cangenerate multiple soundscapes from a single, probabilistically de-fined, “specification”. 
 
 ## Object Detection
 
-Thanks to garder14 for making this pre-trained model available.
+Credits: Thanks to garder14 for making this pre-trained model available.
 
 ### ERFNet - TensorFlow 2
 
@@ -31,7 +31,7 @@ git clone https://github.com/garder14/erfnet-tensorflow2.git
 cd erfnet-tensorflow2/
 ```
 
-Install the dependencies:
+Dependencies of the pre-trained model:
 
 ```bash
 conda create -n tf-gpu tensorflow-gpu cudatoolkit=10.1
