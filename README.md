@@ -8,3 +8,9 @@ Follow the instructions give in the following link:
 
 ## Download Dependecies
 
+The following command will install the packages according to the configuration file requirements.txt.
+
+```bash
+pip install -r requirements.txt
+```
+
